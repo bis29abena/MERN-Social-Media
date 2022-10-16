@@ -37,13 +37,6 @@
     margin-bottom: 10px;
 }
 
-.rightbarFollowingImg {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 15px;
-}
-
 .rightbarInfo {
     margin-bottom: 30px;
 }
@@ -68,9 +61,17 @@
     justify-content: space-between;
 }
 
-.rightbarFollowing {
+.rightbarFollowButton {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    border: none;
+    background-color: #1872f2;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
     display: flex;
-    flex-direction: column;
-    margin-bottom: 20px;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
 }

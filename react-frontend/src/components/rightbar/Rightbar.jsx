@@ -1,12 +1,56 @@
 import React from "react";
 import CelebrationIcon from "@mui/icons-material/Celebration";
 import { Users } from "../../dummdata.js";
-
+import { AuthContext } from "../../context/AuthContext";
 import Online from "../online/Online";
+import Follwoings from "../following/Follwoings.jsx";
+import axios from "axios";
+import { useContext, useEffect, useState } from "react";
+import AddIcon from "@mui/icons-material/Add";
+import RemoveIcon from "@mui/icons-material/Remove";
 
 import "./rightbar.css";
 
-export default function Rightbar({profile}) {
+export default function Rightbar({ profile }) {
+  const [friends, setFriends] = useState([]);
+  const { user, dispatch } = useContext(AuthContext);
+  const [followed, setFollowed] = useState(user.followings.includes(profile?._id));
+
+  useEffect(() => {
+    setFollowed(user.followings.includes(profile?._id));
+  }, [user, profile]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const res = await axios.get("/users/friends/" + profile._id);
+        setFriends(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFriends();
+  }, [profile]);
+
+  const followUser = async () => {
+    try {
+      if (followed) {
+        await axios.put("/users/" + profile._id + "/unfollow", {
+          userId: user._id,
+        });
+        dispatch({ type: "UNFOLLOW", payload: profile._id });
+      } else {
+        await axios.put("/users/" + profile._id + "/follow", {
+          userId: user._id,
+        });
+        dispatch({ type: "FOLLOW", payload: profile._id });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setFollowed(!followed)
+  };
+
   const HomeRightBar = () => {
     return (
       <>
@@ -29,55 +73,36 @@ export default function Rightbar({profile}) {
   const ProfileRightBar = () => {
     return (
       <div>
+        {profile.username !== user.username && (
+          <button className="rightbarFollowButton" onClick={followUser}>
+            {followed ? "Unfollow" : "Follow"}
+            {followed ? <RemoveIcon /> : <AddIcon />}
+          </button>
+        )}
         <h4 className="rightbarTitle">User Information</h4>
         <div className="rightbarInfo">
           <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">City:</span>
-            <span className="rightbarInfoValue">Kumasi</span>
+            <span className="rightbarInfoValue">{profile.city}</span>
           </div>
           <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">From:</span>
-            <span className="rightbarInfoValue">Ghana</span>
+            <span className="rightbarInfoValue">{profile.from}</span>
           </div>
           <div className="rightbarInfoItem">
             <span className="rightbarInfoKey">Relationship:</span>
-            <span className="rightbarInfoValue">Married</span>
+            <span className="rightbarInfoValue">
+              {profile.relationship === 1
+                ? "Single"
+                : profile.relationship === 2
+                ? "Married"
+                : "-"}
+            </span>
           </div>
         </div>
         <h4 className="rightbarTitle">User Friends</h4>
         <div className="rightbarFollowings">
-          <div className="rightbarFollowing">
-            <img
-              src="assets/persons/bismark.jpg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">Bismark Osei</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="assets/persons/3.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFolloingName">Bismark Osei</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="assets/persons/2.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">Bismark Osei</span>
-          </div>
-          <div className="rightbarFollowing">
-            <img
-              src="assets/persons/4.jpeg"
-              alt=""
-              className="rightbarFollowingImg"
-            />
-            <span className="rightbarFollowingName">Bismark Osei</span>
-          </div>
+          <Follwoings friends={friends} />
         </div>
       </div>
     );

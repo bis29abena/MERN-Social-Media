@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema(
   {
@@ -6,16 +6,13 @@ const PostSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
     desc: {
       type: String,
       max: 500,
     },
-
     img: {
       type: String,
     },
-
     likes: {
       type: Array,
       default: [],
@@ -24,4 +21,4 @@ const PostSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("Post", PostSchema);
+module.exports = mongoose.model("Post", PostSchema);

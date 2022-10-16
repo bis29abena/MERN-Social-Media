@@ -1,8 +1,6 @@
-import { Router } from "express";
-import User from "../models/User.js";
-import bcrypt from "bcrypt";
-
-const route = Router();
+const route = require("express").Router();
+const User = require("../models/User");
+const bcrypt = require("bcrypt");
 
 //REGISTER
 route.post("/register", async (req, res) => {
@@ -41,4 +39,4 @@ route.post("/login", async (req, res) => {
   }
 });
 
-export default route;
+module.exports = route;
