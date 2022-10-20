@@ -2,6 +2,7 @@ import Home from "./pages/home/Home";
 import Login from "../src/pages/login/Login";
 import Register from "../src/pages/register/Register";
 import Profile from "../src/pages/profile/Profile";
+import Messenger from "./pages/messenger/Messenger";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
@@ -19,6 +20,7 @@ function App() {
           element={user ? <Navigate to="/" /> : <Register />}
         />
         <Route path="/profile/:username" element={user ? <Profile /> : <Navigate to="/login" />} />
+        <Route path="/messenger" element={!user ? <Navigate to="/" />  : <Messenger />}/>
       </Routes>
     </BrowserRouter>
   );
