@@ -40,6 +40,8 @@ route.delete("/:id", async (req, res) => {
   }
 });
 
+//get a user
+
 route.get("/", async (req, res) => {
   const userId = req.query.userId;
   const username = req.query.username;
